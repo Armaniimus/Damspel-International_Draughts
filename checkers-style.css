@@ -19,4 +19,11 @@
 	display:  block;
 	height: 400px;
 	width: 400px;
+	clear: both;
+}
+#display{
+	height: 50px;
+	width: 150px;
+	border: solid black 1px;
+	float: left;
 }

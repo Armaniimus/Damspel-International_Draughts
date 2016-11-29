@@ -7,8 +7,10 @@
 		<title>Checkers</title>
 	</head>
 	<body>
-		<button>Singleplayer</button>
-		<button>Multiplayer</button>
+		<button class=button onclick="singeplayer()">Singleplayer</button>
+		<button class=button onclick="multiplayer()">Multiplayer</button>
+		<button class=button onclick="undo_action()">Undo action</button>
+		<div id=display></div>
 		<div class=grid>
 			<div class=row>
 				<div class="squar black" onclick="row_ten___square_one()"id="row_ten_square_one"></div><!--squar1-->
@@ -39,7 +41,7 @@
 				<div class="squar white" onclick="row_eight___square_two()"id="row_ten_square_two"></div><!--squar2-->
 				<div class="squar black" onclick="row_eight___square_three()"id="row_ten_square_three"></div><!--squar3-->
 				<div class="squar white" onclick="row_eigth___square_four()"id="row_ten_square_four"></div><!--squar4-->
-				<div class="squar black" onclick="row_eigth___square_five()"id="row_ten_square_five"></div><!--squar5-->
+				<div class="squar black" onclick="row_eight___square_five()"id="row_ten_square_five"></div><!--squar5-->
 				<div class="squar white" onclick="row_eight___square_six()"id="row_ten_square_six"></div><!--squar6-->
 				<div class="squar black" onclick="row_eight___square_seven()"id="row_ten_square_seven"></div><!--squar7-->
 				<div class="squar white" onclick="row_eight___square_eight()"id="row_ten_square_eight"></div><!--squar8-->
