@@ -1,0 +1,22 @@
+.black{
+	background-color: saddlebrown;
+}
+.white{
+	background-color: lightgoldenrodyellow;
+}
+.row{
+	clear: both;
+	display:  block;
+}
+.squar{
+	height: 40px;
+	width: 40px;
+	float: left;
+	display:  block;
+}
+.grid{
+	border: solid black 3px;
+	display:  block;
+	height: 400px;
+	width: 400px;
+}
