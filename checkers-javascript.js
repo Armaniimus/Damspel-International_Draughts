@@ -1,38 +1,60 @@
+/////////////////////////////////////////////////////////
+//creates string variables
+
+//used to write white and black stones to the board
 var piece = "O"
+var piece_two = "D"
 var black = "<center>"+piece.fontcolor("black")+"</center>"
+var blackdam = "<center>"+piece_two.fontcolor("black")+"</center>"
 var white = "<center>"+piece.fontcolor("white")+"</center>"
+var whitedam = "<center>"+piece_two.fontcolor("white")+"</center>"
+var clor = ""//needed to switch between black and white
 
-var txt = ""
+//etc.
 var temp = ""
-var temp_two = []
-var clor = black
 var testdata = ""
-var printdisplay = ""
+var printdisplay = "" //used for writing to UI.
 
-var row = "row_"
-var square ="_square_"
+/////////////////////////////////////////////////////////
+//creates number variables
 
-var rownumb = ""
-var squarenumb = ""
+//used to reach proper location inside the positionarray.
+var y_pos = 0 //translates height to proper subarray.
+var x_pos = 0 //translates width to proper article in the array.
 
-var numb_array =["0","one","two","three","four","five","six","seven","eight","nine","ten"]
-var positionarray = [ 'row_zero', 'row_one' ,'row_two', 'row_three','row_four','row_five','row_six','row_seven','row_eight','row_nine','row_ten']
-positionarray[0] = []
-positionarray[1] = []
-positionarray[2] = []
-positionarray[3] = []
-positionarray[4] = []
-positionarray[5] = []
-positionarray[6] = []
-positionarray[7] = []
-positionarray[8] = []
-positionarray[9] = []
-positionarray[10] = []
+//temp_x and temp_y are needed for the movement of stones
+var temp_y_pos = 0 
+var temp_x_pos = 0
 
+//stores what stone is selected   also used in the reset
+//0=empty  1=whitestone  2=whitedam  3=blackstone  4=blackdam
+var stoneid = 0
 
-var y_pos = 0
-var x_pos = 0
-var stoneid = 0		//0=empty	1=white		2=black
+////////////////////////////////////////////////
+//creates arrays
+
+//used to create the names for the arrays.
+var numb_array =["zero","one","two","three","four","five","six","seven","eight","nine","ten"]
+
+//used for creating the proper id names.
+var square_array = []
+var row_array = []
+
+//becomes 2dimensional and is used to store the values of every brown square on the board
+var positionarray = []
+
+//creates article's inside the arrays.
+for(temp = 0; temp <= 10; temp++){
+	
+	square_array[temp] = "_square_"+numb_array[temp]
+	row_array[temp] = "row_"+numb_array[temp]
+	positionarray[temp] = row_array[temp]
+	
+	//changes articles into arrays
+	positionarray[temp] = []
+}
+//resets temp variable
+temp = ""
 
 ///////////////////////////////////////////////////////
 
@@ -44,96 +66,187 @@ function multiplayer(){
 	reset_id()
 }
 
+//writes the visual stones to the UI
 function reset(){
 	printdisplay = ""
 	returntodisplay()
+	
 	for(y_pos =1; y_pos < 11; y_pos ++){
 		
-		switch(y_pos){			
-			case 1:
-				clor = white
-				break
-			case 5:
-				clor = ""
-				break
-			case 7:	
-				clor = black
-				break
-		}
-			
+		reset_switch()
+		
 		for(x_pos = 2; x_pos < 11; x_pos++){
-			temp = "row_"+numb_array[y_pos]+"_square_"+numb_array[x_pos]
+			temp = row_array[y_pos]+square_array[x_pos]
 			document.getElementById(temp).innerHTML = clor
 			x_pos ++
 		}
 		y_pos ++
 
 		for(x_pos = 1; x_pos < 11; x_pos++){
-			temp = "row_"+numb_array[y_pos]+"_square_"+numb_array[x_pos]
+			temp = row_array[y_pos]+square_array[x_pos]
+			
 			document.getElementById(temp).innerHTML = clor
 			x_pos ++
 		}	
 	}
+	stoneid = 0
+	clor = ""
 }
+
+//writes the functional stones to the array
 function reset_id(){
 	
 	for(y_pos =1; y_pos < 11; y_pos ++){
 		
-		switch(y_pos){			
-			case 1:
-				stoneid = 1	
-				break
-			case 5:
-				stoneid = 0
-				break
-			case 7:	
-				stoneid = 2
-				break
-		}	
-
+		reset_switch()
+		
 		for(x_pos = 2; x_pos < 11; x_pos ++){
-			temp = "row_"+numb_array[y_pos]+"_square_"+numb_array[x_pos]
-
-			positionarray[ y_pos ][ x_pos ] = stoneid
 			
-			document.getElementById(temp).innerHTML = positionarray[ y_pos ][ x_pos ] = stoneid
-
+			temp = row_array[y_pos]+square_array[x_pos]
+			positionarray[ y_pos ][ x_pos ] = stoneid
+			document.getElementById(temp).innerHTML = stoneid
 			x_pos ++
 		}
 		y_pos ++
 
 		for(x_pos = 1; x_pos < 11; x_pos++){
-			temp = "row_"+numb_array[y_pos]+"_square_"+numb_array[x_pos]
 			
+			temp = row_array[y_pos]+square_array[x_pos]
 			positionarray[ y_pos ][ x_pos ] = stoneid
-
-			document.getElementById(temp).innerHTML = positionarray[ y_pos ][ x_pos ] = stoneid 
-			
+			document.getElementById(temp).innerHTML = stoneid 
 			x_pos ++
-		}
-		
+		}	
 	}
+	stoneid = 0
+	clor = ""
 }
-	
 
+//supports the resets
+function reset_switch(){
+	switch(y_pos){			
+			case 1:
+				clor = white
+				stoneid = 1
+				break
+			case 5:
+				clor = ""
+				stoneid = 0
+				break
+			case 7:	
+				clor = black
+				stoneid = 3
+				break
+	}	
+}
+
+///////////////////////////////////////////////////////////	
+
+//core of the program
 function execute(){
-	//temp = "Height = " + y_pos + " Width = " + x_pos
+	testdata +="<br /><br />execute = true"
+	testdata +="<br />temp_x = "+y_pos
+	testdata +="<br />temp_x = "+x_pos
 	
-	printdisplay = positionarray[ y_pos ][ x_pos ]
-	returntodisplay()
-	write_piece()
+	//tests if the same button is clicked twice
+	if(temp_y_pos == y_pos && temp_x_pos == x_pos){
+		clearmove()
+	}
+	else{
+		//tests if a stone was selected.
+		if(stoneid > 0){
+			write_piece()
+			//background c
+		}
+		else{
+			if(positionarray[y_pos][x_pos] == 0){
+				testdata +="<br /><br />bottom execute= false"
+				testdata +="<br />stoneid = "+stoneid
+			}
+			else{
+				stoneid = positionarray[y_pos][x_pos]
+				temp_y_pos = y_pos
+				temp_x_pos = x_pos
+				
+				testdata +="<br /><br />bottom execute= true"
+				testdata +="<br />stoneid = "+stoneid
+				testdata +="<br />temp_y_pos = "+temp_y_pos
+				testdata +="<br />temp_x_pos = "+temp_x_pos
+			}
+		}
+		printdisplay = positionarray[ y_pos ][ x_pos ]
+		returntodisplay()
+	}
+	document.getElementById("testlog").innerHTML = testdata
+}
+
+function clearmove(){
+	temp_y_pos = 0
+	temp_x_pos = 0
+	y_pos = 0
+	x_pos = 0
+	stoneid = 0
+	
+	testdata +="<br /><br />clearmove = true"
+	testdata +="<br />temp_y = "+temp_x_pos
+	testdata +="<br />temp_x = "+temp_y_pos
+	testdata +="<br />y_pos = "+y_pos
+	testdata +="<br />x_pos = "+x_pos
+	testdata +="<br />stoneid = "+stoneid
 }
 
 function returntodisplay(){
+	
+	testdata +="<br /><br />return to display = true"
+	testdata +="<br />printdisplay="+printdisplay
 	document.getElementById("display").innerHTML = printdisplay
 }
 
 function write_piece(){
-	rownumb = "row_"+numb_array[y_pos]
-	squarenumb = "_square_"+numb_array[x_pos]
-	document.getElementById(rownumb+squarenumb).innerHTML = clor
+	
+	positionarray[temp_y_pos][temp_x_pos] = 0
+	positionarray[y_pos][x_pos] = stoneid
+	
+	testdata +="<br /><br />write_piece = true"
+	testdata += "<br />positionarray[tempy][tempx]"+positionarray[temp_y_pos][temp_x_pos]
+	testdata +="<br />positionarray[y][x]="+positionarray[y_pos][x_pos]
+	
+	translate_stoneid()//translates stoneid to clor
+	
+	//removes stone from UI
+	document.getElementById(row_array[temp_y_pos]+square_array[temp_x_pos]).innerHTML = ""
+	
+	//writes the moved stone to UI
+	document.getElementById(row_array[y_pos]+square_array[x_pos]).innerHTML = clor
+	stoneid = 0
 }
+
+function translate_stoneid(){
+	switch(stoneid){
+		case 0 :
+			clor = ""
+			break
+		case 1 :
+			clor = white
+			break
+		case 2 :
+			clor = whitedam
+			break
+		case 3 :
+			clor = black
+			break
+		case 4 :
+			clor = blackdam
+			break
+	}
+	testdata +="<br /><br />translate_stoneid = true"
+	testdata +="<br />clor= "+clor
+}
+	
+	
+	
 //////////////////////////////////////////////////////////////////
+//translates onclick created events to height and width positions before sending them to the core of the program.
+
 function row_ten___square_one(){
 	y_pos = 10
 	x_pos = 1

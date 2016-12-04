@@ -6,7 +6,7 @@
 }
 .row{
 	clear: both;
-	display:  block;
+	display: block;
 }
 .squar{
 	height: 40px;
@@ -23,10 +23,21 @@
 	height: 400px;
 	width: 400px;
 	clear: both;
+	display: block;
+	position: fixed;
+	top: 55px;
+	left: 8px;
 }
 #display{
 	height: 50px;
 	width: 150px;
 	border: solid black 1px;
+	float: left;
+}
+#testlog{
+	float: left;
+	border: solid black 1px;
+}
+button{
 	float: left;
 }
