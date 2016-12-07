@@ -12,8 +12,7 @@ var whitedam = "<center>"+piece_two.fontcolor("white")+"</center>";
 var clor = ""; //needed to switch between black and white
 
 //etc.
-var temp = "";
-var temp_two = 2;
+var temp_one = "";
 var testdata = "";
 var printdisplay = ""; //used for writing to UI.
 
@@ -30,8 +29,11 @@ var temp_y_pos = 0;
 var temp_x_pos = 0;
 
 //stores what stone is selected   also used in the reset
-//0=empty  1=whitestone  2=whitedam  3=blackstone  4=blackdam
+//0=empty  1=whitestone  2=whitedam  3=blackstone  //4=blackdam
 var stoneid = 0;
+
+//etc.
+var temp_two = 2;
 
 ////////////////////////////////////////////////
 //creates arrays
@@ -48,17 +50,17 @@ var row_array = [];
 var positionarray = [];
 
 //creates article's inside the arrays.
-for(temp = 0; temp <= 10; temp++){
+for(temp_one = 0; temp_one <= 10; temp_one++){
 	
-	square_array[temp] = "_square_"+numb_array[temp];
-	row_array[temp] = "row_"+numb_array[temp];
-	positionarray[temp] = row_array[temp];
+	square_array[temp_one] = "_square_"+numb_array[temp_one];
+	row_array[temp_one] = "row_"+numb_array[temp_one];
+	positionarray[temp_one] = row_array[temp_one];
 	
 	//changes articles into arrays
-	positionarray[temp] = [];
+	positionarray[temp_one] = [];
 }
-//resets temp variable
-temp = "";
+//resets temp_one variable
+temp_one = "";
 
 ///////////////////////////////////////////////////////
 //reset functions;
@@ -75,6 +77,8 @@ function multiplayer(){
 function reset(){
 	printdisplay = "";
 	returntodisplay();
+	clor = white
+	stoneid = 0
 	
 	
 	for(y_pos =1; y_pos < 11; y_pos ++){
@@ -82,21 +86,21 @@ function reset(){
 		reset_switch();
 		
 		for(x_pos = temp_two; x_pos < 11; x_pos++){
-			temp = row_array[y_pos]+square_array[x_pos];
+			temp_one = row_array[y_pos]+square_array[x_pos];
 			positionarray[ y_pos ][ x_pos ] = stoneid;
 			
-			document.getElementById(temp).innerHTML = clor
-			//document.getElementById(temp).innerHTML = stoneid;
+			document.getElementById(temp_one).innerHTML = clor
+			//document.getElementById(temp_one).innerHTML = stoneid;
 			
 			x_pos ++;
 		}
-		//switches temp_between 
+		//switches temp_two between 1 and 2
 		switch(temp_two){
 			case 1:
-				temp_two=2
+				temp_two = 2
 				break;
 			case 2:
-				temp_two=1
+				temp_two = 1
 				break;
 		}	
 	}
@@ -118,16 +122,19 @@ function reset_switch(){
 				clor = black;
 				stoneid = 3;
 				break;
-	}	
+	}
+	//gathers testdata
+	//testdata_reset_switch()
 }
 
-///////////////////////////////////////////////////////////	
+//////////////////////////////
 //execute core of the program
-//////////////////////
+//////////////////////////////
 function execute(){
-	testdata +="<br />execute = true <br />";
-	testdata +="temp_x = "+y_pos+"<br />";
-	testdata +="temp_x = "+x_pos+"<br />";
+	
+	//gathers testdata
+	testdata_execute()
+	testdata_execute_start()
 	
 	//tests if the same button is clicked twice
 	if(temp_y_pos == y_pos && temp_x_pos == x_pos){
@@ -143,24 +150,24 @@ function execute(){
 			//makes sure you can't select an empty square to move
 			if(positionarray[y_pos][x_pos] == 0){
 				//if true do nothing
-				testdata +="<br />bottom execute= false <br />";
-				testdata +="stoneid = "+stoneid+"<br />";
+				
+				//gather testdata
+				testdata_save_movefalse()
 			}
 			//save stoneid and position
 			else{
-				
 				save_moveinfo()
-				
 			}
 		}
 		printdisplay = positionarray[ y_pos ][ x_pos ];
 		returntodisplay();
 	}
-	document.getElementById("testlog").innerHTML = testdata;
+	testdata_execute_end()
+//	document.getElementById("testlog").innerHTML = testdata;
 }
-//////////////////////////////////////////////////////////////////
+//////////////////////////////////
 //Supporting functions for execute
-/////////////////
+//////////////////////////////////
 
 //unselect stone when clicking on it for the second time
 function clearmove(){
@@ -170,53 +177,49 @@ function clearmove(){
 	x_pos = 0;
 	stoneid = 0;
 	
-	testdata +="<br />clearmove = true <br />";
-	testdata +="temp_y = "+temp_x_pos+"<br />";
-	testdata +="temp_x = "+temp_y_pos+"<br />";
-	testdata +="y_pos = "+y_pos+"<br />";
-	testdata +="x_pos = "+x_pos+"<br />";
-	testdata +="stoneid = "+stoneid+"<br />";
+	//testdata gathering
+	testdata_clearmove()
 }
 
 //prints data to display in the UI 
 function returntodisplay(){
 	
-	testdata +="<br /><br />return to display = true <br />";
-	testdata +="printdisplay="+printdisplay+"<br />";
-	document.getElementById("display").innerHTML = printdisplay;
+	//testdata gathering
+	testdata_returntodisplay()
+	
+	document.getElementById("display").innerHTML = printdisplay;	
 }
 
 //prints data to board in the UI
 function write_piece(){
 	
+	//removes old stone and prints new stone to positionarray
 	positionarray[temp_y_pos][temp_x_pos] = 0;
 	positionarray[y_pos][x_pos] = stoneid;
 	
-	testdata +="<br />write_piece = true <br />";
-	testdata += "positionarray[tempy][tempx]"+positionarray[temp_y_pos][temp_x_pos]+"<br />";
-	testdata +="positionarray[y][x]="+positionarray[y_pos][x_pos]+"<br />";
+	//testdata gathering
+	testdata_write_piece()
 	
-	translate_stoneid();//translates stoneid to clor
+	//translates stoneid to clor
+	translate_stoneid();
 	
 	//removes stone from the UI
-	document.getElementById(row_array[ temp_y_pos ]+square_array[ temp_x_pos ]).innerHTML = "";
+	document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).innerHTML = "";
 	
 	//prints moved stone to the UI
-	document.getElementById(row_array[y_pos]+square_array[x_pos]).innerHTML = clor;
+	document.getElementById(row_array [ y_pos ] +square_array [ x_pos ] ).innerHTML = clor;
 	stoneid = 0;
 }	
+
+//save stoneid and position to prepare for movement
 function save_moveinfo(){
-	stoneid = positionarray[y_pos][x_pos];
+	stoneid = positionarray [ y_pos ] [ x_pos ] ;
 	temp_y_pos = y_pos;
 	temp_x_pos = x_pos;
 
-	testdata +="<br />save_moveinfo= true<br />";
-	testdata +="stoneid = "+stoneid+"<br />";
-	testdata +="temp_y_pos = "+temp_y_pos+"<br />";
-	testdata +="temp_x_pos = "+temp_x_pos+"<br />";
-
+	//testdata gathering
+	testdata_save_moveinfo()
 }
-
 
 function translate_stoneid(){
 	switch(stoneid){
@@ -236,8 +239,7 @@ function translate_stoneid(){
 			clor = blackdam;
 			break;
 	}
-	testdata +="<br />translate_stoneid = true <br />";
-	testdata +="clor= "+clor+"<br />";
+	testdata_translate_stoneid()
 }
 	
 //////////////////////////////////////////////////////////////////
@@ -500,4 +502,181 @@ function row_one___square_ten(){
 	y_pos = 1;
 	x_pos = 10;
 	execute();
+}
+
+///////////////////////////////
+//testdata gathering functions
+///////////////////////////////
+
+//1 and 0 are functional storage
+//testdata arrays
+var testdata_array = ['','','','','','','','','','','']
+var testdata_temp_array = ['','','','','','','','','','','','']
+
+//testdata temp x and y
+var testdata_temp_y_pos = ['','','','','','','','','','','','']
+var testdata_temp_x_pos = ['','','','','','','','','','','','']
+
+//testdata x and y
+var testdata_y_pos = ['','','','','','','','','','','','']
+var testdata_x_pos = ['','','','','','','','','','','','']
+
+//etc
+var testdata_stoneid = ['','','','','','','','','','','','']
+var testdata_clor = ['','','','','','','','','','','','']
+var testdata_printdisplay = ['','','','','','','','','','','','']
+var testdata_activefunc = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ']
+
+//counters 4 testdata
+var testcount = 2 //start runs on 2 4 and 6 //end runs on 3 5 and 7
+var s_or_e = 0 // 0 is start 1 is end
+var id_sore = "" //defines where to write to
+
+function printer_of_testdata(){
+	
+	if(s_or_e == 0){
+		id_sore = "start_"
+	}
+	else{
+		id_sore = "end_"
+	}
+	if(testcount == 11){
+		testcount = 9
+		
+		//removes first 2 articles in the array to make room for a 2 new articles at the end
+		testdata_array.splice(2,2)
+		testdata_temp_array.splice(2,2)
+		
+		//x or y position
+		testdata_temp_y_pos.splice(2,2)
+		testdata_temp_x_pos.splice(2,2)
+		testdata_y_pos.splice(2,2)
+		testdata_x_pos.splice(2,2)
+		
+		//etc
+		testdata_stoneid.splice(2,2)
+		testdata_clor.splice(2,2)
+		testdata_printdisplay.splice(2,2)
+		testdata_activefunc.splice(2,2)
+	}
+	//writes to article 10 of each array
+	for(temp_two = s_or_e+2; temp_two <= s_or_e+9; temp_two++){
+		
+		testdata_array[s_or_e] += temp_two-1+" "+testdata_array[temp_two]+"<br />"//1
+		testdata_temp_array[s_or_e] += temp_two-1+" "+testdata_temp_array[temp_two]+"<br />"//2
+		
+		testdata_temp_y_pos[s_or_e] += temp_two-1+" "+testdata_temp_y_pos[temp_two]+"<br />"//3
+		testdata_temp_x_pos[s_or_e] += temp_two-1+" "+testdata_temp_x_pos[temp_two]+"<br />"//4
+		
+		testdata_y_pos[s_or_e] += temp_two-1+" "+testdata_y_pos[temp_two]+"<br />"
+		testdata_x_pos[s_or_e] += temp_two-1+" "+testdata_x_pos[temp_two]+"<br />"
+		
+		testdata_stoneid[s_or_e] += temp_two-1+" "+testdata_stoneid[temp_two]+"<br />"
+		testdata_clor[s_or_e] += temp_two-1+" "+testdata_clor[temp_two]+"<br />"
+		testdata_printdisplay[s_or_e] += temp_two-1+" "+testdata_printdisplay[temp_two]+"<br />"
+		testdata_activefunc[s_or_e] += temp_two-1+" "+testdata_activefunc[temp_two]+"<br />"
+		temp_two++
+	}
+	
+	//print's to test display's
+	document.getElementById(id_sore+"array").innerHTML = testdata_array[s_or_e]
+	document.getElementById(id_sore+"temp_array").innerHTML = testdata_temp_array[s_or_e]
+	
+	document.getElementById(id_sore+"temp_y_pos").innerHTML =  testdata_temp_y_pos[s_or_e]
+	document.getElementById(id_sore+"temp_x_pos").innerHTML = testdata_temp_x_pos[s_or_e]
+	
+	document.getElementById(id_sore+"y_pos").innerHTML = testdata_y_pos[s_or_e]
+	document.getElementById(id_sore+"x_pos").innerHTML = testdata_x_pos[s_or_e]
+	
+	document.getElementById(id_sore+"stoneid").innerHTML = testdata_stoneid[s_or_e]
+	document.getElementById(id_sore+"clor").innerHTML = testdata_clor[s_or_e]
+	document.getElementById(id_sore+"printdisplay").innerHTML = testdata_printdisplay[s_or_e]
+	document.getElementById(id_sore+"functionreach").innerHTML = testdata_activefunc[s_or_e]
+	
+	//removes 10th array article again to prevent adding endless articles
+	testdata_array[s_or_e] = ""
+	testdata_temp_array[s_or_e] = ""
+		
+	//x or y position
+	testdata_temp_y_pos[s_or_e] = ""
+	testdata_temp_x_pos[s_or_e] = ""
+	testdata_y_pos[s_or_e] = ""
+	testdata_x_pos[s_or_e] = ""
+	
+	//etc
+	testdata_stoneid[s_or_e] = ""
+	testdata_clor[s_or_e] = ""
+	testdata_printdisplay[s_or_e] = ""
+	testdata_activefunc[s_or_e] = " "
+	
+	//count 1 up
+	testcount ++
+}
+//reset stuff
+//function testdata_reset_switch(){
+//	testdata_activefunc[testcount] += "reset_switch = true <br />";
+//}
+
+//main functions
+function testdata_execute(){
+	testdata_activefunc[testcount] += "execute = true"+"<br />";
+}
+
+function testdata_clearmove(){
+	testdata_activefunc[testcount] += "clearmove = true"+"<br />";
+}
+
+function testdata_returntodisplay(){
+	testdata_activefunc[testcount] += "return to display = true"+"<br />";
+}
+
+function testdata_write_piece(){
+	testdata_activefunc[testcount] += "write_piece = true"+"<br />";
+}
+
+function testdata_save_moveinfo(){
+	testdata_activefunc[testcount] += "save_moveinfo= true"+"<br />";
+}
+function testdata_save_movefalse(){
+	testdata_activefunc[testcount] += "save_moveinfo= false"+"<br />";
+}
+function testdata_translate_stoneid(){
+	testdata_activefunc[testcount] += "translate_stoneid = true"+"<br />";
+}
+
+function testdata_execute_start(){
+	s_or_e = 0
+	testdata_execute_gathering()
+	printer_of_testdata()
+}
+
+function testdata_execute_end(){
+	s_or_e = 1
+	testdata_execute_gathering()
+	printer_of_testdata()
+}
+
+function testdata_execute_gathering(){
+	
+	//reached arrays with x and y values
+	testdata_array[testcount] = "positionarray[y_pos][x_pos]"+positionarray[y_pos][x_pos];
+	
+	testdata_temp_array[testcount] = "positionarray[temp_y_pos][temp_x_pos]="+positionarray[temp_y_pos][temp_x_pos];
+	
+	//temp x and y
+	testdata_temp_y_pos[testcount] ="temp_y_pos = "+temp_x_pos;
+	testdata_temp_x_pos[testcount] ="temp_x_pos = "+temp_y_pos;
+	
+	//x and y
+	testdata_y_pos[testcount] ="y_pos = "+y_pos;
+	testdata_x_pos[testcount] ="x_pos = "+x_pos;
+	
+	//test stoneid
+	testdata_stoneid[testcount] ="stoneid = "+stoneid;
+	
+	//clor
+	testdata_clor[testcount] ="clor= "+clor;
+	
+	//prints temp printdata
+	testdata_printdisplay[testcount] ="printdisplay="+printdisplay;
 }

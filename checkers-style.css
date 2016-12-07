@@ -24,9 +24,7 @@
 	width: 400px;
 	clear: both;
 	display: block;
-	position: fixed;
-	top: 55px;
-	left: 8px;
+	position: relative;
 }
 #display{
 	height: 50px;
@@ -35,9 +33,26 @@
 	float: left;
 }
 #testlog{
-	float: left;
+	clear: both;
 	border: solid black 1px;
+	width: 50%
 }
 button{
 	float: left;
+}
+.test_display{
+	float: left;
+	border: solid black 1px;
+	min-height: 120px;
+	width: 49.5%;
+	overflow: auto;
+}
+.position{
+	min-height: 20px;
+	width: 99.5%;
+	max-width: 300px;
+	border: solid black 2px;
+	overflow-y: auto;
+	height: 60px
+		
 }
