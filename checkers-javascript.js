@@ -77,8 +77,8 @@ function multiplayer(){
 function reset(){
 	printdisplay = "";
 	returntodisplay();
-	clor = white
-	stoneid = 0
+	clor = white;
+	stoneid = 0;
 	
 	
 	for(y_pos =1; y_pos < 11; y_pos ++){
@@ -89,7 +89,7 @@ function reset(){
 			temp_one = row_array[y_pos]+square_array[x_pos];
 			positionarray[ y_pos ][ x_pos ] = stoneid;
 			
-			document.getElementById(temp_one).innerHTML = clor
+			document.getElementById(temp_one).innerHTML = clor;
 			//document.getElementById(temp_one).innerHTML = stoneid;
 			
 			x_pos ++;
@@ -132,38 +132,50 @@ function reset_switch(){
 //////////////////////////////
 function execute(){
 	
-	//gathers testdata
-	testdata_execute()
-	testdata_execute_start()
+	//gathers start testdata
+	testdata_execute();
+	testdata_execute_start();
 	
 	//tests if the same button is clicked twice
 	if(temp_y_pos == y_pos && temp_x_pos == x_pos){
+		
+		//unselects square
+		document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "saddlebrown";
+		
 		clearmove();
 	}
+	
 	else{
+		
 		//tests if a stone was selected.
 		if(stoneid > 0){
-			write_piece();
-			
+			write_piece();	
 		}
+		
 		else{
+			
 			//makes sure you can't select an empty square to move
 			if(positionarray[y_pos][x_pos] == 0){
-				//if true do nothing
+				
+				//do nothing functional
 				
 				//gather testdata
 				testdata_save_movefalse()
 			}
+			
 			//save stoneid and position
 			else{
 				save_moveinfo()
+				
+				//shows selected square
+				document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "brown";
 			}
 		}
 		printdisplay = positionarray[ y_pos ][ x_pos ];
 		returntodisplay();
 	}
-	testdata_execute_end()
-//	document.getElementById("testlog").innerHTML = testdata;
+	//gathers end testdata
+	testdata_execute_end();
 }
 //////////////////////////////////
 //Supporting functions for execute
@@ -178,14 +190,14 @@ function clearmove(){
 	stoneid = 0;
 	
 	//testdata gathering
-	testdata_clearmove()
+	testdata_clearmove();
 }
 
 //prints data to display in the UI 
 function returntodisplay(){
 	
 	//testdata gathering
-	testdata_returntodisplay()
+	testdata_returntodisplay();
 	
 	document.getElementById("display").innerHTML = printdisplay;	
 }
@@ -198,7 +210,7 @@ function write_piece(){
 	positionarray[y_pos][x_pos] = stoneid;
 	
 	//testdata gathering
-	testdata_write_piece()
+	testdata_write_piece();
 	
 	//translates stoneid to clor
 	translate_stoneid();
@@ -209,6 +221,9 @@ function write_piece(){
 	//prints moved stone to the UI
 	document.getElementById(row_array [ y_pos ] +square_array [ x_pos ] ).innerHTML = clor;
 	stoneid = 0;
+	
+	//unselects square
+	document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "saddlebrown";
 }	
 
 //save stoneid and position to prepare for movement
@@ -218,7 +233,7 @@ function save_moveinfo(){
 	temp_x_pos = x_pos;
 
 	//testdata gathering
-	testdata_save_moveinfo()
+	testdata_save_moveinfo();
 }
 
 function translate_stoneid(){
