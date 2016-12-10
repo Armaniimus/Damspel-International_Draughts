@@ -31,6 +31,8 @@ var temp_x_pos = 0;
 //stores what stone is selected   also used in the reset
 //0=empty  1=whitestone  2=whitedam  3=blackstone  //4=blackdam
 var stoneid = 0;
+var ablemove = 0; //0= no ablemove 1= ablemove
+var same_t = 0; // 0= not ownteam 1= ownteam
 
 //etc.
 var temp_two = 2;
@@ -77,11 +79,12 @@ function multiplayer(){
 function reset(){
 	printdisplay = "";
 	returntodisplay();
-	clor = white;
 	stoneid = 0;
+	temp_two = 2;
+	clearmove()
 	
 	
-	for(y_pos =1; y_pos < 11; y_pos ++){
+	for(y_pos = 1; y_pos < 11; y_pos ++){
 		
 		reset_switch();
 		
@@ -139,9 +142,10 @@ function execute(){
 	//tests if the same button is clicked twice
 	if(temp_y_pos == y_pos && temp_x_pos == x_pos){
 		
-		//unselects square
-		document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "saddlebrown";
+		//removes visuals to selected square
+		unselect_square()
 		
+		//removes data used for selection
 		clearmove();
 	}
 	
@@ -149,9 +153,25 @@ function execute(){
 		
 		//tests if a stone was selected.
 		if(stoneid > 0){
-			write_piece();	
+			
+			//test if you want to place a stone on your own team's square
+			allowedmove()
+			
+			if(ablemove == 1){
+				//move stone in selected square
+				write_piece();
+
+				//removes visuals to selected square
+				unselect_square()
+			}
+			else{
+				printdisplay = "You cannot do that move"
+				returntodisplay()
+			}
+			
 		}
 		
+		//if no stone is selected
 		else{
 			
 			//makes sure you can't select an empty square to move
@@ -165,10 +185,12 @@ function execute(){
 			
 			//save stoneid and position
 			else{
+				//saves data and add's visual
 				save_moveinfo()
 				
-				//shows selected square
-				document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "brown";
+				//adds visuals to selected square
+				select_square()
+				
 			}
 		}
 		printdisplay = positionarray[ y_pos ][ x_pos ];
@@ -183,6 +205,8 @@ function execute(){
 
 //unselect stone when clicking on it for the second time
 function clearmove(){
+	
+	//resets all data
 	temp_y_pos = 0;
 	temp_x_pos = 0;
 	y_pos = 0;
@@ -222,8 +246,6 @@ function write_piece(){
 	document.getElementById(row_array [ y_pos ] +square_array [ x_pos ] ).innerHTML = clor;
 	stoneid = 0;
 	
-	//unselects square
-	document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "saddlebrown";
 }	
 
 //save stoneid and position to prepare for movement
@@ -236,6 +258,7 @@ function save_moveinfo(){
 	testdata_save_moveinfo();
 }
 
+//translates stoneid to a visualstyle
 function translate_stoneid(){
 	switch(stoneid){
 		case 0 :
@@ -254,10 +277,44 @@ function translate_stoneid(){
 			clor = blackdam;
 			break;
 	}
+	//gathers testdata
 	testdata_translate_stoneid()
 }
+function unselect_square(){
+	//unselects square
+	document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "saddlebrown";
+}
+function select_square(){
+	//selects square
+	document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "brown";
+}
+
+/////////////////////////////////////////////////
+//series of tests to see if a certaint move can be made
+/////////////////////////////////////////////////
 	
-//////////////////////////////////////////////////////////////////
+function allowedmove(){
+	sameteam()
+	if (same_t == 0){
+		ablemove = 1
+	}
+	else{
+		ablemove = 0
+	}
+}
+function sameteam(){
+	if (stoneid > 0	&& positionarray[ y_pos ][ x_pos ] > 0){
+		same_t = 1
+	}
+	else if (stoneid > 2 && positionarray[ y_pos ][ x_pos ] > 2){
+		same_t = 1
+	}
+	else{
+		same_t = 0
+	}
+}
+	
+///////////////////////////////////////////////////////////
 //translates onclick created events to height and width positions before //sending them to the core of the program.
 ///////////////////////////////////////
 
@@ -525,22 +582,22 @@ function row_one___square_ten(){
 
 //1 and 0 are functional storage
 //testdata arrays
-var testdata_array = ['','','','','','','','','','','']
-var testdata_temp_array = ['','','','','','','','','','','','']
+var testdata_array = []
+var testdata_temp_array = []
 
 //testdata temp x and y
-var testdata_temp_y_pos = ['','','','','','','','','','','','']
-var testdata_temp_x_pos = ['','','','','','','','','','','','']
+var testdata_temp_y_pos = []
+var testdata_temp_x_pos = []
 
 //testdata x and y
-var testdata_y_pos = ['','','','','','','','','','','','']
-var testdata_x_pos = ['','','','','','','','','','','','']
+var testdata_y_pos = []
+var testdata_x_pos = []
 
 //etc
-var testdata_stoneid = ['','','','','','','','','','','','']
-var testdata_clor = ['','','','','','','','','','','','']
-var testdata_printdisplay = ['','','','','','','','','','','','']
-var testdata_activefunc = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ']
+var testdata_stoneid = []
+var testdata_clor = []
+var testdata_printdisplay = []
+var testdata_activefunc = []
 
 //counters 4 testdata
 var testcount = 2 //start runs on 2 4 and 6 //end runs on 3 5 and 7
