@@ -33,6 +33,7 @@ var temp_x_pos = 0;
 var stoneid = 0;
 var ablemove = 0; //0= no ablemove 1= ablemove
 var same_t = 0; // 0= not ownteam 1= ownteam
+var approvedmove = 0; //0= not approved move 1= aproved
 
 //etc.
 var temp_two = 2;
@@ -158,7 +159,7 @@ function execute(){
 			allowedmove()
 			
 			if(ablemove == 1){
-				//checks if your getting a dam en then makes it 1
+				//Creates dam's a player reaches the other side
 				check_dam();
 				
 				//move stone in selected square
@@ -291,6 +292,7 @@ function select_square(){
 	//selects square
 	document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "brown";
 }
+//Creates dam's when you reach the other side
 function check_dam(){	
 	if (stoneid == 1 && y_pos == 10){
 		stoneid = 2	
@@ -307,13 +309,44 @@ function check_dam(){
 	
 function allowedmove(){
 	sameteam()
-	if (same_t == 0){
+	stonemovetest()
+	if (same_t == 0 && approvedmove == 1){
 		ablemove = 1
 	}
 	else{
 		ablemove = 0
 	}
 }
+function stonemovetest(){
+	approvedmove = 0;
+	switch(stoneid){
+		   
+		   	case 1:
+				//tests if a regular white stone can move the way the user wants
+				if(  (y_pos-1 == temp_y_pos)  && (  (x_pos-1 == temp_x_pos) || (x_pos+1 == temp_x_pos)  )  ){
+					
+					approvedmove = 1;
+					}
+				break;
+		   	case 2:
+				
+				approvedmove = 1;
+				break;
+		   	case 3:
+				//tests if a regular black stone can move the way the user wants
+				if(  (y_pos+1 == temp_y_pos)  && (  (x_pos-1 == temp_x_pos) || (x_pos+1 == temp_x_pos)  )  ){
+				
+				approvedmove = 1;
+				}
+				break;
+		   	case 4:
+				
+				approvedmove = 1;
+				break;
+			
+		   }
+}
+
 //checks if your old selected square hold the same color stone as target square
 function sameteam(){
 	if ((stoneid > 0 && stoneid < 3)&& (positionarray[ y_pos ][ x_pos ] > 0 && positionarray[ y_pos ][ x_pos ] < 3)){
