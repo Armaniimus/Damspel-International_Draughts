@@ -78,9 +78,11 @@ function multiplayer(){
 
 //creates the functional data and writes visual stones to UI
 function reset(){
+	if(stoneid > 0){
+		unselect_square()
+	}
 	printdisplay = "";
 	returntodisplay();
-	stoneid = 0;
 	temp_two = 2;
 	clearmove()
 	
@@ -326,7 +328,12 @@ function stonemovetest(){
 				if(  (y_pos-1 == temp_y_pos)  && (  (x_pos-1 == temp_x_pos) || (x_pos+1 == temp_x_pos)  )  ){
 					
 					approvedmove = 1;
-					}
+				}
+				//tests if a black stone can be taken backwards
+				else if(  (positionarray[y_pos][x_pos] > 2)  && y_pos+1 == temp_y_pos && (x_pos-1 == temp_x_pos || x_pos+1 == temp_x_pos)  ){
+									
+					approvedmove = 1;									   
+			   }
 				break;
 		   	case 2:
 				
@@ -336,8 +343,13 @@ function stonemovetest(){
 				//tests if a regular black stone can move the way the user wants
 				if(  (y_pos+1 == temp_y_pos)  && (  (x_pos-1 == temp_x_pos) || (x_pos+1 == temp_x_pos)  )  ){
 				
-				approvedmove = 1;
+					approvedmove = 1;
 				}
+				//tests if a white stone can be taken backwards
+				else if(  (positionarray[y_pos][x_pos] < 3 && positionarray[y_pos][x_pos] > 0) && (  (y_pos-1 == temp_y_pos) && (x_pos-1 == temp_x_pos || x_pos+1 == temp_x_pos)  )  ){
+									
+					approvedmove = 1;									   
+			   }
 				break;
 		   	case 4:
 				
