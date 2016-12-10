@@ -158,6 +158,9 @@ function execute(){
 			allowedmove()
 			
 			if(ablemove == 1){
+				//checks if your getting a dam en then makes it 1
+				check_dam();
+				
 				//move stone in selected square
 				write_piece();
 
@@ -288,6 +291,15 @@ function select_square(){
 	//selects square
 	document.getElementById(row_array [ temp_y_pos ] +square_array [ temp_x_pos ] ).style.backgroundColor = "brown";
 }
+function check_dam(){	
+	if (stoneid == 1 && y_pos == 10){
+		stoneid = 2	
+	}
+	else if (stoneid == 3 && y_pos == 1){
+		stoneid = 4
+	}
+}
+
 
 /////////////////////////////////////////////////
 //series of tests to see if a certaint move can be made
@@ -302,8 +314,9 @@ function allowedmove(){
 		ablemove = 0
 	}
 }
+//checks if your old selected square hold the same color stone as target square
 function sameteam(){
-	if (stoneid > 0	&& positionarray[ y_pos ][ x_pos ] > 0){
+	if ((stoneid > 0 && stoneid < 3)&& (positionarray[ y_pos ][ x_pos ] > 0 && positionarray[ y_pos ][ x_pos ] < 3)){
 		same_t = 1
 	}
 	else if (stoneid > 2 && positionarray[ y_pos ][ x_pos ] > 2){
@@ -313,7 +326,6 @@ function sameteam(){
 		same_t = 0
 	}
 }
-	
 ///////////////////////////////////////////////////////////
 //translates onclick created events to height and width positions before //sending them to the core of the program.
 ///////////////////////////////////////
@@ -614,7 +626,7 @@ function printer_of_testdata(){
 	}
 	if(testcount == 11){
 		testcount = 9
-		
+	
 		//removes first 2 articles in the array to make room for a 2 new articles at the end
 		testdata_array.splice(2,2)
 		testdata_temp_array.splice(2,2)
@@ -684,10 +696,11 @@ function printer_of_testdata(){
 	//count 1 up
 	testcount ++
 }
+	
 //reset stuff
-//function testdata_reset_switch(){
-//	testdata_activefunc[testcount] += "reset_switch = true <br />";
-//}
+function testdata_reset_switch(){
+	testdata_activefunc[testcount] += "reset_switch = true <br />";
+}
 
 //main functions
 function testdata_execute(){
