@@ -34,6 +34,8 @@ var stoneid = 0;
 var ablemove = 0; //0= no ablemove 1= ablemove
 var same_t = 0; // 0= not ownteam 1= ownteam
 var approvedmove = 0; //0= not approved move 1= aproved
+var ablecapture = 0; //0=not allowed 1=allowed
+var direction = 0; // 0=lefttop 1=righttop 2=leftbot 3=rightbot
 
 //etc.
 var temp_two = 2;
@@ -321,7 +323,9 @@ function allowedmove(){
 }
 function stonemovetest(){
 	approvedmove = 0;
-	switch(stoneid){
+	if(positionarray[y_pos][x_pos] == 0){
+		
+		switch(stoneid){
 		   
 		   	case 1:
 				//tests if a regular white stone can move the way the user wants
@@ -330,15 +334,25 @@ function stonemovetest(){
 					approvedmove = 1;
 				}
 				//tests if a black stone can be taken backwards
-				else if(  (positionarray[y_pos][x_pos] > 2)  && y_pos+1 == temp_y_pos && (x_pos-1 == temp_x_pos || x_pos+1 == temp_x_pos)  ){
-									
-					approvedmove = 1;									   
+				else{
+					capture_forward()
+					
+					if(ablecapture == 0){
+						capture_backward()	
+					}
+						
+					if(ablecapture == 1){
+						approvedmove = 1
+						removecapturedstone()
+					}								   
 			   }
 				break;
+				
 		   	case 2:
 				
 				approvedmove = 1;
 				break;
+				
 		   	case 3:
 				//tests if a regular black stone can move the way the user wants
 				if(  (y_pos+1 == temp_y_pos)  && (  (x_pos-1 == temp_x_pos) || (x_pos+1 == temp_x_pos)  )  ){
@@ -346,22 +360,32 @@ function stonemovetest(){
 					approvedmove = 1;
 				}
 				//tests if a white stone can be taken backwards
-				else if(  (positionarray[y_pos][x_pos] < 3 && positionarray[y_pos][x_pos] > 0) && (  (y_pos-1 == temp_y_pos) && (x_pos-1 == temp_x_pos || x_pos+1 == temp_x_pos)  )  ){
-									
-					approvedmove = 1;									   
-			   }
+				else{
+					capture_forward()
+					
+					if(ablecapture == 0){
+						capture_backward()	
+					}
+						
+					if(ablecapture == 1){
+						approvedmove = 1
+						removecapturedstone()
+					}
+				}									   
 				break;
+				
 		   	case 4:
 				
 				approvedmove = 1;
 				break;
 			
 		   }
+	}
 }
 
 //checks if your old selected square hold the same color stone as target square
 function sameteam(){
-	if ((stoneid > 0 && stoneid < 3)&& (positionarray[ y_pos ][ x_pos ] > 0 && positionarray[ y_pos ][ x_pos ] < 3)){
+	if (  (stoneid > 0 && stoneid < 3) && (positionarray[ y_pos ][ x_pos ] > 0 && positionarray[ y_pos ][ x_pos ] < 3)  ){
 		same_t = 1
 	}
 	else if (stoneid > 2 && positionarray[ y_pos ][ x_pos ] > 2){
@@ -371,6 +395,149 @@ function sameteam(){
 		same_t = 0
 	}
 }
+
+function capture_forward(){
+	
+	ablecapture = 0
+	switch(stoneid){
+			
+		case 1:
+			
+			//looks if capture is to the lefttop and enemystone is black
+			if(y_pos-2 == temp_y_pos && x_pos+2 == temp_x_pos){
+				
+				if(positionarray[y_pos-1][x_pos+1] == 3 || positionarray[y_pos-1][x_pos+1] == 4){
+					ablecapture = 1
+					direction = 0
+				}
+			}
+			
+			//looks if capture is to the righttop and enemystone is black
+			if(y_pos-2 == temp_y_pos && x_pos-2 == temp_x_pos){
+				
+				if(positionarray[y_pos-1][x_pos-1] == 3 || positionarray[y_pos-1][x_pos-1] == 4){
+					ablecapture = 1
+					direction = 1
+				}
+			}
+			
+			break;
+			
+		case 3:
+			
+			//looks if capture is to the leftbot and enemystone is white
+			if(y_pos+2 == temp_y_pos && x_pos+2 ==  temp_x_pos){
+				
+				if(positionarray[y_pos+1][x_pos+1] == 1 || positionarray[y_pos+1][x_pos+1] == 2){
+					ablecapture = 1
+					direction = 2
+					
+				}
+			}
+			
+			//looks if capture is to the rightbot and enemystone is white
+			if(y_pos+2 == temp_y_pos && x_pos-2 == temp_x_pos){
+				
+				if(positionarray[y_pos+1][x_pos-1] == 1 || positionarray[y_pos+1][x_pos-1] == 2){
+					ablecapture = 1
+					direction = 3
+				}
+			}
+			
+			break;
+			
+	}
+	
+}
+
+function capture_backward(){
+	
+	ablecapture = 0
+	switch(stoneid){
+		
+		case 1:
+			
+			//looks if capture is to the leftbot and enemystone is black
+			if(y_pos+2 == temp_y_pos && x_pos+2 ==  temp_x_pos){
+				
+				if(positionarray[y_pos+1][x_pos+1] == 3 || positionarray[y_pos+1][x_pos+1] == 4){
+					ablecapture = 1
+					direction = 2
+					
+				}
+			}
+			
+			//looks if capture is to the rightbot and enemystone is black
+			if(y_pos+2 == temp_y_pos && x_pos-2 == temp_x_pos){
+				
+				if(positionarray[y_pos+1][x_pos-1] == 3 || positionarray[y_pos+1][x_pos-1] == 4){
+					ablecapture = 1
+					direction = 3
+				}
+			}
+			
+			break;
+			
+		case 3:
+			
+			//looks if capture is to the lefttop and enemystone is white
+			if(y_pos-2 == temp_y_pos && x_pos+2 == temp_x_pos){
+				
+				if(positionarray[y_pos-1][x_pos+1] == 1 || positionarray[y_pos-1][x_pos+1] == 2){
+					ablecapture = 1
+					direction = 0
+				}
+			}
+			
+			//looks if capture is to the righttop and enemystone is white
+			if(y_pos-2 == temp_y_pos && x_pos-2 == temp_x_pos){
+				
+				if(positionarray[y_pos-1][x_pos-1] == 1 || positionarray[y_pos-1][x_pos-1] == 2){
+					ablecapture = 1
+					direction = 1
+				}
+			}
+			
+			break;
+			
+	}
+	
+}
+
+function removecapturedstone(){
+	switch(direction){
+			
+		case 0:
+			positionarray[y_pos-1][x_pos+1] = 0
+			document.getElementById(row_array [ y_pos-1 ] +square_array [ x_pos+1 ] ).innerHTML = "";
+			
+			
+			break;
+			
+		case 1:
+			positionarray[y_pos-1][x_pos-1] = 0
+			document.getElementById(row_array [ y_pos-1 ] +square_array [ x_pos-1 ] ).innerHTML = "";
+			
+			break;
+			
+		case 2:
+			positionarray[y_pos+1][x_pos+1] = 0
+			document.getElementById(row_array [ y_pos+1 ] +square_array [ x_pos+1 ] ).innerHTML = "";
+			
+			break;
+			
+		case 3:
+			positionarray[y_pos+1][x_pos-1] = 0
+			document.getElementById(row_array [ y_pos+1 ] +square_array [ x_pos-1 ] ).innerHTML = "";
+			
+			break;
+			
+			
+	}
+
+}
+
+
 ///////////////////////////////////////////////////////////
 //translates onclick created events to height and width positions before //sending them to the core of the program.
 ///////////////////////////////////////
